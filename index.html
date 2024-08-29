@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossy Scientific Calculator with Multicolor Bubble Background</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: lightyellow;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .calculator {
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            animation: gradientShift 10s ease infinite;
+            position: relative;
+            z-index: 10;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .display {
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+            font-size: 24px;
+            height: 40px;
+            overflow: hidden;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: rgba(255,255,255,0.9);
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display"></div>
+        <div class="buttons">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">)</button>
+            <button onclick="appendToDisplay('%')">%</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('*')">*</button>
+            <button onclick="appendToDisplay('sin')">sin</button>
+            
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('-')">-</button>
+            <button onclick="appendToDisplay('cos')">cos</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('+')">+</button>
+            <button onclick="appendToDisplay('tan')">tan</button>
+            
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="appendToDisplay('Math.PI')">π</button>
+            <button onclick="appendToDisplay('Math.E')">e</button>
+            <button onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+
+        function appendToDisplay(value) {
+            display.textContent += value;
+        }
+
+        function clearDisplay() {
+            display.textContent = '';
+        }
+
+        function calculate() {
+            try {
+                let result = eval(display.textContent.replace('sin', 'Math.sin').replace('cos', 'Math.cos').replace('tan', 'Math.tan'));
+                display.textContent = result;
+            } catch (error) {
+                display.textContent = 'Error';
+            }
+        }
+
+        // Background animation
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            
+            const size = Math.random() * 30 + 20; // Medium size bubbles (20-50px)
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.bottom = '-50px';
+            
+            // Generate random color
+            const hue = Math.floor(Math.random() * 360);
+            bubble.style.backgroundColor = `hsla(${hue}, 100%, 50%, 0.3)`;
+            
+            const duration = Math.random() * 10 + 5;
+            bubble.style.animation = `float ${duration}s linear infinite`;
+            
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => {
+                bubble.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createBubble, 300);
+
+        // Add keyframe animation for floating bubbles
+        const styleSheet = document.styleSheets[0];
+        styleSheet.insertRule(`
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(-20px);
+                    opacity: 1;
+                }
+                50% {
+                    transform: translateY(-50vh) translateX(20px);
+                }
+                100% {
+                    transform: translateY(-100vh) translateX(-20px);
+                    opacity: 0;
+                }
+            }
+        `, styleSheet.cssRules.length);
+    </script>
+</body>
+  </html>
